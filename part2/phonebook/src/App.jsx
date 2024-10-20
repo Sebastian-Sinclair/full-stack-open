@@ -23,7 +23,6 @@ const App = () => {
     const personObject = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1
     }
 
     if (persons.map(person => person.name.toLowerCase()).includes(personObject.name.toLowerCase())) {
@@ -36,6 +35,16 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
           setNewName('')
           setNewNumber('')
+        })
+    }
+  }
+
+  const deletePerson = (id) => {
+    if (window.confirm(`Delete ${persons.find(person => person.id === id).name} ?`)) {
+      personService
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
         })
     }
   }
@@ -71,6 +80,7 @@ const App = () => {
       <Persons
         persons={persons}
         filterName={filterName}
+        deletePerson={deletePerson}
       />
     </div>
   )
