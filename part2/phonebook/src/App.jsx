@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import Persons from './components/Persons'
+import PersonForm from './components/PersonForm'
+import Filter from './components/Filter'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -19,7 +22,7 @@ const App = () => {
       id: persons.length + 1
     }
 
-    if (persons.map(person => person.name).includes(personObject.name)) {
+    if (persons.map(person => person.name.toLowerCase()).includes(personObject.name.toLowerCase())) {
       alert(`${newName} is already added to phonebook`)
     }
     else {
@@ -41,46 +44,26 @@ const App = () => {
     setFilterName(event.target.value)
   }
 
-  const personsToShow = persons.map(person => person.name.toLowerCase()).includes(filterName.toLowerCase())
-    ? persons.filter(person => person.name.toLowerCase() === filterName.toLowerCase())
-    : persons
-
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with
-        <input
-          value={filterName}
-          onChange={handleFilterChange}
-        />
-      </div>
-      <h2>add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name:
-          <input
-            value={newName}
-            onChange={handleNameChange}
-          />
-        </div>
-        <div>
-          number:
-          <input
-            value={newNumber}
-            onChange={handleNumberChange}
-          />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      {personsToShow.map(person =>
-        <div key={person.name}>
-          {person.name + ' ' + person.number}
-        </div>
-      )}
+      <Filter
+        filterName={filterName}
+        handleFilterChange={handleFilterChange}
+      />
+      <h3>add a new</h3>
+      <PersonForm
+        addPerson={addPerson}
+        newName={newName}
+        newNumber={newNumber}
+        handleNameChange={handleNameChange}
+        handleNumberChange={handleNumberChange}
+      />
+      <h3>Numbers</h3>
+      <Persons
+        persons={persons}
+        filterName={filterName}
+      />
     </div>
   )
 }
