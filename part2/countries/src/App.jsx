@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import countryService from './services/countries'
+import weatherService from './services/weather'
 
 const App = () => {
   const [filter, setFilter] = useState('')
   const [countries, setCountries] = useState([])
+  const [weather, setWeather] = useState([])
 
   useEffect(() => {
     countryService
@@ -15,6 +17,12 @@ const App = () => {
 
   const handleCountryChange = (event) => {
     setFilter(event.target.value)
+
+    weatherService
+      .getByLatLon(countriesToShow[0].latlng[0], countriesToShow[0].latlng[1])
+      .then(returnedWeather => {
+        setWeather(returnedWeather)
+      })
   }
 
   const showCountry = (country) => {
@@ -63,6 +71,7 @@ const App = () => {
   } else if (countriesToShow.length === 1) {
     return (
       <div>
+        {console.log(countriesToShow[0].latlng[0])}
         find countries
         <input
           value={filter}
@@ -78,6 +87,11 @@ const App = () => {
           </li>)}
         </ul>
         <img src={countriesToShow[0].flags.png} alt={countriesToShow[0].flags.alt} />
+        <h2>Weather in {countriesToShow[0].capital}</h2>
+        <div>temperature {weather.main.temp} Kelvin</div>
+        <img src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt={weather.weather[0].description} />
+        <div>wind {weather.wind.speed} m/s</div>
+
       </div>
     )
   }
