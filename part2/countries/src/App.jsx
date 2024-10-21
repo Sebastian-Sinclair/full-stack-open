@@ -17,6 +17,10 @@ const App = () => {
     setFilter(event.target.value)
   }
 
+  const showCountry = (country) => {
+    setFilter(country.name.common)
+  }
+
   const countriesToShow = countries.filter(country => country.name.common.toLowerCase().includes(filter.toLowerCase()))
 
   if (countriesToShow.length === countries.length || countriesToShow.length === 0) {
@@ -51,6 +55,7 @@ const App = () => {
         {countriesToShow.map(country =>
           <div key={country.name.common}>
             {country.name.common}
+            <button onClick={() => showCountry(country)}>show</button>
           </div>
         )}
       </div>
